@@ -4,8 +4,8 @@ from statistics import variance
 
 Grid = namedtuple('Grid', 'x y width height')
 Color = namedtuple('Color', 'r g b')
-threshold = 0.5  # 0-1
-
+THRESHOLD = 0.5  # 0-1
+MAX_VARIANCE = 255 ** 2
 
 class SubImage:
     def __init__(self, img, grid):
@@ -19,10 +19,12 @@ class SubImage:
             s += (index * count)
         return s / sum(hist)
 
-    def variance1Chnl(img, avg):
-        hist =
-        s = 0
+    def variance(img, avg):
+        hist = img.histogram()
+        sqrSum = 0
         for index, count in enumerate(hist):
+            sqrSum += ((index - avg) ** 2) * count
+        return sqrSum / sum(hist)
 
     def averageColor(self):
         imgR, imgG, imgB = self.img.split()
@@ -33,4 +35,14 @@ class SubImage:
     def detailLevel(self):
         imgR, imgG, imgB = self.img.split()
         avgClr = self.averageColor()
-        vrnc = variance(imgR.histogram)
+        vrnc = SubImage.variance(imgR, avgClr.r) + SubImage.variance(imgG, avgClr.g) + SubImage.variance(imgB, avgClr.b)
+        return vrnc / (MAX_VARIANCE * 3)
+
+
+def main():
+    img = Image.open('test.jpg')
+    s = SubImage(img, Grid(0, 0, 1000, 1000))
+    print(s.detailLevel())
+
+
+main()
