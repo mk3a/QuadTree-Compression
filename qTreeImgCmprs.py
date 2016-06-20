@@ -39,10 +39,9 @@ class SubImage:
         return vrnc / (MAX_VARIANCE * 3)
 
 
-def main():
-    img = Image.open('test.jpg')
-    s = SubImage(img, Grid(0, 0, 1000, 1000))
-    print(s.detailLevel())
-
-
-main()
+def testDetailLevel():
+    highDtlImg = Image.open('test.jpg')
+    lowDtlImg = Image.open('test2.jpg')
+    dtl1 = SubImage(highDtlImg, Grid(0, 0, highDtlImg.size[0], highDtlImg.size[1]))
+    dtl2 = SubImage(lowDtlImg, Grid(0, 0, lowDtlImg.size[0], lowDtlImg.size[1]))
+    print(dtl1.detailLevel(), dtl2.detailLevel())
